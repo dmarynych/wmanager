@@ -1,0 +1,230 @@
+<?xml-stylesheet type="text/xsl" href="docs.xsl"?><javascript fileName="wManager.js">
+    <function name="empty" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+        <property name="key" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+        </property>
+    </function>
+    <function name="isset" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+        <property name="a" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+        </property>
+        <property name="l" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+        </property>
+        <property name="i" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Number">
+        </property>
+    </function>
+    <function name="fbug" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+    </function>
+    <property name="$" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+        <object_literal name="wManager" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+            <object_literal name="globals" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="Object">
+                <description>Global vars, applied to all windows, can be extentended by method $.wManager.setGlobal()</description>
+                <property name="globals" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="String">
+                    <description>Global vars, applied to all windows, can be extentended by method $.wManager.setGlobal()</description>
+                </property>
+                <function name="save" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <property name="iconsPath" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+            </object_literal>
+            <object_literal name="defaults" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="Object">
+                <description>Vars, applied to current window</description>
+                <property name="width" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="String">
+                    <description>Width of window</description>
+                </property>
+                <property name="width" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="String">
+                    <description>Width of window</description>
+                </property>
+                <property name="width" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="false" internal="false" type="Number">
+                    <description>Width of window</description>
+                </property>
+                <property name="minHeight" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Number">
+                </property>
+                <property name="left" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="top" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="zIndex" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Number">
+                </property>
+                <property name="title" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="content" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="modal" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="icon" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="group" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="content_id" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="buttMinimize" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="buttSettings" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="controlButton" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                </property>
+                <function name="settingsClick" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <property name="ajaxDataType" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <function name="ajaxLoaded" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <property name="resizable" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="draggable" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="confirmClose" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Boolean">
+                </property>
+                <property name="confirmCloseMsg" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="winCode" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <property name="createParams" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                </property>
+                <function name="beforeclose" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="close" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="resize" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="resizeStop" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="minimize" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="dragStop" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="dragStart" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+                <function name="stateChanged" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                </function>
+            </object_literal>
+            <property name="winArrByLeft" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+            </property>
+            <object_literal name="wins_op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+            </object_literal>
+            <object_literal name="windows" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+            </object_literal>
+            <function name="addDiv" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="ret" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="useWin" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="openWin" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="wid" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <object_literal name="op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    <property name="rawTitle" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="title" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="minHeight" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="minWidth" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="group" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                    </property>
+                </object_literal>
+                <property name="undeleteable" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="pos" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="win" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="newd" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="_title" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="loadAjax" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    <property name="ajaxURL" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                </property>
+            </function>
+            <function name="loadJSON" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    <property name="ajaxURL" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="ajaxDataType" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="String">
+                    </property>
+                </property>
+            </function>
+            <function name="loading" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="stopLoading" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="icon" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="setTitle" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="getPos" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="win" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="left" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="top" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="width" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="height" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="zIndex" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="setPos" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="addButton" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="addHTML" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="resizeHeight" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="resizeWidth" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="checkPos" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    <property name="left" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="top" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                </property>
+            </function>
+            <function name="getNewPos" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="ret" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                </property>
+                <property name="l" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <property name="t" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="close" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="minimize" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="closeAll" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="wins" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+            </function>
+            <function name="extend_op" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+            <function name="serialize" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+                <property name="wins" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </property>
+                <object_literal name="ret" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    <property name="res" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                    </property>
+                    <property name="wins" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                    </property>
+                    <property name="res" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                    </property>
+                </object_literal>
+                <property name="z" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Array">
+                </property>
+                <object_literal name="ar" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Object">
+                </object_literal>
+            </function>
+            <function name="restore" scope="static" constructor="false" deprecated="false" private="false" protected="false" ignored="true" internal="false" type="Function">
+            </function>
+        </object_literal>
+    </property>
+</javascript>

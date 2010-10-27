@@ -1,0 +1,3 @@
+method func() -> open()
+trdata.utils.empty() -> empty()
+trdata.utils.isset() -> isset()

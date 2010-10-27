@@ -1,0 +1,22 @@
+.wM-win {
+	-moz-box-shadow: 2px 2px 5px #888;
+	-webkit-box-shadow: 2px 2px 5px #888;
+}
+.wM-icon {
+	margin:5px 6px 0;
+	border:0;
+}
+.wM-win .ui-dialog-content{
+	background: !important;
+}
+.wM-win .ui-dialog-titlebar{
+	background:  !important;
+	border: 0;
+}
+.wM-win-active .ui-dialog-content{
+	background: !important;
+}
+.wM-win-active .ui-dialog-titlebar{
+	background:  !important;
+	border: 0;
+}
