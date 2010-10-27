@@ -2,7 +2,7 @@
 	//$.wManager = {};
 	$.wManager = {
 		/** 
-		* Global vars, applied to all windows, can be extentended by method $.wManager.setGlobal()
+		* Global vars, applied to all windows, can be extended by method $.wManager.setGlobal()
 		*/
 		globals: {
 			// Container for windows
@@ -54,8 +54,12 @@
 			ajaxLoaded: function() {},
 			resizable: true,
 			draggable: true,
-			confirmClose: false,
-			confirmCloseMsg: 'Вы уверены что хотите закрыть окно?',
+			confirmClose: true,
+			
+			confirmCloseMsg: 'Are you sure?',
+			confirmCloseOk: 'yes',
+			confirmCloseCancel: 'cancel',
+			
 			winCode: '',
 			createParams: '',
 			/* Events */
@@ -227,18 +231,24 @@
 						$.wManager.close(wid);
 					},
 					beforeclose: function(event) {
+						if ($('#wm_confirm_'+ op.wid).length != 0 ) {
+							$('#wm_confirm_'+ op.wid).remove();
+						}
+						
 						if( op.confirmClose === true) {
-							var msg = $('<h3>'+ op.confirmCloseMsg + '</h3>');
-							var ok = $('<input type="button" id="close_win_'+ op.wid +'" value="OK" />')
-								.click( function() { op.close(); $.wManager.close(wid); });
-							var cancel = $('<input type="button" id="cancel_close_win_'+ op.wid +'" value="Cancel" />')
-								.click( function() { $('.'+ wid).unblock() });
+							var msg = $('<div>'+ op.confirmCloseMsg + '</div>');
+							var ok = $('<input type="button" value="'+ op.confirmCloseOk + '" />')
+								.click( function() { $.wManager.close(wid); $('#wm_confirm_'+ op.wid).remove(); });
+							var cancel = $('<input type="button" value="'+ op.confirmCloseCancel + '" />')
+								.click( function() { $('#wm_confirm_'+ op.wid).remove(); });
 							msg = msg.add(ok).add(cancel);
 							
-							$('.'+ wid).block({
-								message: msg,
-								css: {width: '100%'}
-							});
+							var zIndex = +win.css('zIndex') + 1;							
+							var pos = $('.'+ op.wid).offset();
+							var top = parseInt( pos.top, 10) + 22;
+							var left = parseInt( pos.left, 10) + $('.'+ op.wid).width() - 50;
+							$('<div style="top:'+ top +'px; left:'+ left +'px; width: 110px; z-index: ' + zIndex  + '" class="wm_tooltip" id="wm_confirm_'+ op.wid +'"></div>')
+								.html(msg).appendTo($.wManager.globals.winsHolder);
 							
 							return false;
 						}

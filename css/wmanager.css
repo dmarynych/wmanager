@@ -3,13 +3,14 @@
 	-webkit-box-shadow: 2px 2px 5px #888;
 }
 .wM-icon {
-	margin:5px 6px 0;
+	margin:1px 4px 0px 4px;
 	border:0;
 }
 .wM-win .ui-dialog-content{
 	background: !important;
 }
 .wM-win .ui-dialog-titlebar{
+	padding: 2px !important;
 	background:  !important;
 	border: 0;
 }
@@ -20,3 +21,11 @@
 	background:  !important;
 	border: 0;
 }
+.wm_tooltip {
+	background:none repeat scroll 0 0 #FCFCC5;
+	border:1px solid #CCCCCC;
+
+	padding:6px;
+	position:absolute;
+	z-index:20000 !important;
+	}

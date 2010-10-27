@@ -2,8 +2,8 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>wManager test</title>
-	    <link rel="stylesheet" href="../css/wManager_theme/jquery-ui.css" type="text/css" />
-		<link rel="stylesheet" href="../css/style.css" type="text/css" />
+	    <link rel="stylesheet" href="../css/Aristo/jquery-ui-1.8.5.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../css/wmanager.css" type="text/css" />
 	
 	    <script type="text/javascript" src="../js/jquery-1.4.1.js"></script>
 	    <script type="text/javascript" src="../js/jquery-ui.js"></script>		
@@ -14,7 +14,7 @@
 		<button onclick="basicWin();">open</button>
 		<script>
 			$(function() {
-				// переопределяем глобальные переменные
+				// global vars
 				$.wManager.set_global({
 					iconsPath: '../icons/'
 				});
@@ -29,7 +29,7 @@
 	                'left': 170,
 	                'top': 100,
 	                'title': 'Friends',
-	                'id': '_friends',
+	                'id': 'friends',
 	                'winCode': 'friends',
 	                'open': function() {
 	                	
@@ -43,7 +43,7 @@
 	                'left': 270,
 	                'top': 260,
 	                'title': 'Second',
-	                'id': '_second',
+	                'id': 'second',
 	                'winCode': 'second',
 	                'open': function() {
 	                		
