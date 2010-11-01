@@ -11,46 +11,34 @@
 		
 	</head>
 	<body>
-		<button onclick="basicWin();">open</button>
+		<button onclick="openWin();">open</button>
 		<script>
-			$(function() {
-				// global vars
-				$.wManager.set_global({
-					iconsPath: '../icons/'
-				});
+        $(function() {
+            // global vars
+			$.wManager.set_global({
+				iconsPath: '../icons/'
+			});
 				
 				
-				basicWin();
-				secondWin();
-			})
-			function basicWin() {
-				$.wManager.openWin({
-	                'width': 350,
-	                'left': 170,
-	                'top': 100,
-	                'title': 'Friends',
-	                'id': 'friends',
-	                'winCode': 'friends',
-	                'open': function() {
-	                	
-	                }
-	        	});
-			}
-			
-			function secondWin() {
-				$.wManager.openWin({
-	                'width': 250,
-	                'left': 270,
-	                'top': 260,
-	                'title': 'Second',
-	                'id': 'second',
-	                'winCode': 'second',
-	                'open': function() {
-	                		
-	                }
-	        	});
-			}
+			openWin();
+		});
+		
+		function openWin() {
+			$.wManager.openWin({
+                'width': 350,
+                'left': 170,
+                'top': 100,
+                'title': 'Friends',
+                'winCode': 'friends',
+                'group': 'wins',
+                'open': function() {
+                	                	
+                }
+            });
+		}
 			
 		</script>
+		
+	<ul id="wm_group_wins"></ul>
 	</body>
 </html>

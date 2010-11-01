@@ -91,7 +91,7 @@
 			$('#' + wid).dialog('moveToTop');
 		},
 		openWin: function(options) {
-			var wid = typeof(options.id) == 'undefined' ? genId('wManager_win') : 'wManager_win_' + options.id;
+			var wid = typeof(options.id) == 'undefined' ? $.wManager.utils.genId('wManager_win') : 'wManager_win_' + options.id;
 			if ( !empty(options.content_id) ) {
 				wid = options.content_id;
 			}
@@ -139,10 +139,16 @@
 					_title = _title.substr(0, 17);
 				} 
 				
-				$('.submenu li a[action='+ op.group +']').parent('li')
-					.after('<li id="coll_'+ wid +'"><a href="#" action="'+ op.winCode +'" createParams="'+ op.createParams +'">&nbsp;&nbsp;&nbsp;&nbsp;'+ _title +'</a></li>');
+				var _el = $('<li id="wm_coll_'+ wid +'"><a href="#">'+ _title +'</a></li>')
+				    .attr('action', op.winCode)
+				    .data('createParams', op.createParams)
+				    //.click();
 				
-				init.menu();
+				$('#wm_group_'+ op.group).append(_el);
+				
+				if( !isset($.wManager.windows[op.group]) ) {
+				   $.wManager.windows[op.group] = [];
+				}
 				$.wManager.windows[op.group].push(wid);
 			}
 			
@@ -500,7 +506,19 @@
 			} finally {
 				if ($.isFunction(callback)) callback();	
 			}
-		}
+	},
+	utils: {
+	    genId: function genId(start) {
+            var nid = start +'_'+ Math.floor(Math.random() * 1000);
+            if( $(nid).length === 0 ) {
+                return nid;
+            }
+            else {
+                return $.wManager.utils.genId();
+            }
+        }
+    }
+
 };
 })(jQuery);
 
