@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>wManager test</title>
+		<link rel="stylesheet" href="../../css/Aristo/jquery-ui-1.8.7.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/wmanager.css" type="text/css" />
+		<link rel="stylesheet" href="style.css" type="text/css" />
+	
+		<script type="text/javascript" src="../../js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery-ui-1.8.9.custom.min.js"></script>
+		<script type="text/javascript" src="fg.menu.js"></script>	
+		<script type="text/javascript" src="../../js/wmanager.js"></script>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="main">
+				<a id="start_menu" onclick="return false;" href="#" style="display:block;float:left;width:40px;"><img src="i/start_here.png" border="0"></a>
+			</div>
+			<div id="menu" class="hidden"> 
+				<ul>
+					<li onclick="alert(1)"><a href="#">Browser</a></li>
+					<li onclick="alert(2)"><a href="#">Image viewer</a></li>
+					<li onclick="alert(3)"><a href="#">Table</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="footer">
+			
+			<ul id="wm_group_wins"></ul>
+		</div>
+
+
+		
+		<script type="text/javascript">
+		$(function() {
+			// global vars
+			$.wManager.set_global({
+				iconsPath: '../../icons/'
+			});
+				
+				
+			openWin();
+			
+			
+			// menu
+			$('#start_menu').menu({
+				content: $('#menu').html(),		
+				maxHeight: 180,
+				positionOpts: { 
+					offsetX: 10, 
+					offsetY: 20,
+					directionV: 'top'
+				},
+				showSpeed: 300
+			});
+		});
+		
+		function openWin() {
+			$.wManager.openWin({
+				'width': 350,
+				'left': 170,
+				'top': 100,
+				'title': 'Friends',
+				'winCode': 'friends',
+				'group': 'wins',
+				'open': function() {
+										
+				}
+			});
+		}
+			
+		</script>
+		
+
+	</body>
+</html>

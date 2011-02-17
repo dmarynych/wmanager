@@ -97,7 +97,7 @@
 			}
 			
 			// Если окно с таким айди уже есть - переводим на него фокус или разворачиваем
-			if( $('.'+wid).length == 1 ) {
+			if( $('.'+ wid).length == 1 ) {
 				$.wManager.useWin(wid);
 				return;
 			}
@@ -139,7 +139,7 @@
 					_title = _title.substr(0, 17);
 				} 
 				
-				var _el = $('<li id="wm_coll_'+ wid +'"><a href="#">'+ _title +'</a></li>')
+				var _el = $('<li class="wm_coll" id="wm_coll_'+ wid +'"><a href="#">'+ _title +'</a></li>')
 				    .attr('action', op.winCode)
 				    .data('createParams', op.createParams)
 				    //.click();
@@ -333,7 +333,7 @@
 			return true;
 		},
 		addButton: function(btn, wid) {
-			var addHTML = $('#ui-dialog-title-'+ wid);
+			var addHTML = $('#ui-dialog-title-'+ wid).parent('.ui-dialog-titlebar');
 			$.each( btn, function(i, v) {
 				
 				if( v == null ) {
