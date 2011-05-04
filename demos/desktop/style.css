@@ -1,39 +1,37 @@
 * {margin:0;padding:0;} 
 html, body {height: 100%;}
-#wrap {min-height: 100%;}
 #main {
-	overflow:auto;
-	padding-bottom: 30px;
-	}  /* must be same height as the footer */
+
+} 
 #footer {
-	background: url("../../css/Aristo/images/the_gradient.gif") repeat-x scroll 0 0 transparent;
-	position: relative;
-	margin-top: -30px; /* negative value of footer height */
-	height: 300px;
-	clear:both;
+	background: url("i/panelback.png") repeat-x scroll 0 0 transparent;
+	position: absolute;
+	height: 30px;
+	width:100%;
 }
 
+#wm_group_wins {
+	display:block;
+	float:left;
+}
 
 /* wManager */
 .wm_coll{
 	list-style: none;
 	float: left;
 	height: 30px;
+	line-height: 30px;
 }
 .wm_coll a {
 	text-decoration: none;
-	color:#4F4F4F;
-	padding: 4px;
-	margin-top:5px;
-	background: url("../../css/Aristo/images/button_bg.png") repeat-x scroll 0 0 transparent !important;
+	color:#fff;
+	background: url("i/tasksel.png") repeat-x scroll 0 0 transparent !important;
 }
 .wm_coll a:hover {
 	text-decoration: none;
-	color:#4F4F4F;
-	padding: 4px;
-	background: url("../../css/Aristo/images/button_bg.png") repeat-x scroll 0 -33px transparent !important;
+	color:#ccc;
+	background: url("i/tasksel.png") repeat-x scroll 0 0 transparent !important;
 }
-
 
 
 

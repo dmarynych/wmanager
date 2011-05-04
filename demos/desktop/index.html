@@ -6,27 +6,26 @@
 		<link rel="stylesheet" href="../../css/wmanager.css" type="text/css" />
 		<link rel="stylesheet" href="style.css" type="text/css" />
 	
-		<script type="text/javascript" src="../../js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery-1.6.js"></script>
 		<script type="text/javascript" src="../../js/jquery-ui-1.8.9.custom.min.js"></script>
-		<script type="text/javascript" src="fg.menu.js"></script>	
 		<script type="text/javascript" src="../../js/wmanager.js"></script>
 	</head>
 	<body>
 		<div id="wrap">
 			<div id="main">
-				<a id="start_menu" onclick="return false;" href="#" style="display:block;float:left;width:40px;"><img src="i/start_here.png" border="0"></a>
+				
 			</div>
-			<div id="menu" class="hidden"> 
+			<div id="menu" class="ui-helper-hidde"> 
 				<ul>
-					<li onclick="alert(1)"><a href="#">Browser</a></li>
-					<li onclick="alert(2)"><a href="#">Image viewer</a></li>
-					<li onclick="alert(3)"><a href="#">Table</a></li>
+					<li onclick="video()"><a href="#">Browser</a></li>
+					<li onclick="imgs()"><a href="#">Image viewer</a></li>
+					<li onclick="task_manager()"><a href="#">Table</a></li>
 				</ul>
 			</div>
 		</div>
 
 		<div id="footer">
-			
+			<a id="start_menu" onclick="return false;" href="#" style="display:block;float:left;width:40px;"><img src="i/start_here.png" border="0"></a>
 			<ul id="wm_group_wins"></ul>
 		</div>
 
@@ -34,38 +33,52 @@
 		
 		<script type="text/javascript">
 		$(function() {
+			
+			$('#footer').css({top: $(document).height() - 32});
+			
 			// global vars
 			$.wManager.set_global({
 				iconsPath: '../../icons/'
 			});
 				
 				
-			openWin();
+			//openWin();
 			
-			
-			// menu
-			$('#start_menu').menu({
-				content: $('#menu').html(),		
-				maxHeight: 180,
-				positionOpts: { 
-					offsetX: 10, 
-					offsetY: 20,
-					directionV: 'top'
-				},
-				showSpeed: 300
+			$('#menu').hide().menu().position({
+			    my: 'left bottom',
+			    at: 'left top',
+			    of: $('#start_menu')
 			});
+			
+			$('#start_menu').click(function() { $('#menu').toggle() });
 		});
 		
-		function openWin() {
+		function video() {
 			$.wManager.openWin({
-				'width': 350,
+				'width': 590,
+				'height': 400,
 				'left': 170,
 				'top': 100,
-				'title': 'Friends',
+				'title': 'Test window',
 				'winCode': 'friends',
 				'group': 'wins',
-				'open': function() {
-										
+				'open': function(wid, win) {
+					win.html('<iframe width="560" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
+				}
+			});
+		}
+		
+		function imgs() {
+			$.wManager.openWin({
+				'width': 590,
+				'height': 400,
+				'left': 170,
+				'top': 100,
+				'title': 'Test window',
+				'winCode': 'friends',
+				'group': 'wins',
+				'open': function(wid, win) {
+					win.html('555');
 				}
 			});
 		}
