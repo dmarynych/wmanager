@@ -1,8 +1,8 @@
-(function($){
-	//$.wManager = {};
-	$.wManager = {
+(function($, undefined){
+	//wmanager = {};
+	wmanager = {
 		/** 
-		* Global vars, applied to all windows, can be extended by method $.wManager.setGlobal()
+		* Global vars, applied to all windows, can be extended by method wmanager.setGlobal()
 		*/
 		globals: {
 			// Container for windows
@@ -16,11 +16,11 @@
 		set_global: function(k, v) {
 			if( typeof(k) == 'object' ) {
 				$.each(k, function(key, val) {
-					$.wManager.globals[key] = val;
+					wmanager.globals[key] = val;
 				});
 			}
 			else {
-				$.wManager.globals[k] = v;
+				wmanager.globals[k] = v;
 			}
 			
 		},
@@ -71,7 +71,7 @@
 			dragStop: function() {},
 			dragStart: function() {},
 			stateChanged: function(){
-				$.wManager.globals.save()
+				wmanager.globals.save()
 			}
 			
 		},
@@ -82,37 +82,37 @@
 		// Новое окно открывается на основе существующего дива
 		// Создаем див - основу окна
 		addDiv: function(op) {
-			var ret = $('<div />').attr({'id': op.wid, 'title': op.title}).append(op.content).appendTo($.wManager.globals.winsHolder);	
+			var ret = $('<div />').attr({'id': op.wid, 'title': op.title}).append(op.content).appendTo(wmanager.globals.winsHolder);	
 			return ret;
 		},
 		// Сворачивание и разворачивание окон
-		useWin: function(wid) {
+		focus: function(wid) {
 			$('.' + wid).css('display', 'block');
 			$('#' + wid).dialog('moveToTop');
 		},
 		openWin: function(options) {
-			var wid = typeof(options.id) == 'undefined' ? $.wManager.utils.genId('wManager_win') : 'wManager_win_' + options.id;
+			var wid = typeof(options.id) == 'undefined' ? wmanager.utils.genId('wmanager_win') : 'wmanager_win_' + options.id;
 			if ( !empty(options.content_id) ) {
 				wid = options.content_id;
 			}
 			
 			// Если окно с таким айди уже есть - переводим на него фокус или разворачиваем
 			if( $('.'+ wid).length == 1 ) {
-				$.wManager.useWin(wid);
+				wmanager.focus(wid);
 				return;
 			}
 			
 			// ор - конфиг, для создания нового окна
 			var op = {};
-			op = $.extend(op, $.wManager.defaults, options, {wid: wid});
+			op = $.extend(op, wmanager.defaults, options, {wid: wid});
 
-			if( isset($.wManager.wins_op[wid]) ) {
-				$.extend(op, $.wManager.wins_op[wid]);
+			if( isset(wmanager.wins_op[wid]) ) {
+				$.extend(op, wmanager.wins_op[wid]);
 			}
-
+			
 			// Заголовок окна
 			op.rawTitle = op.title;
-			op.title = '<img src="'+ $.wManager.globals.iconsPath + op.icon +'" align="left" class="wM-icon" id="wM-icon_'+wid+'" />'+ 
+			op.title = '<img src="'+ wmanager.globals.iconsPath + op.icon +'" align="left" class="wM-icon" id="wM-icon_'+wid+'" />'+ 
 						'<span class="'+ wid +'_title">'+ op.title +'</span>';
 			
 			// 
@@ -124,7 +124,7 @@
 			
 			// Создание диалога на основе существующего ДОМ-элемента или создаем его вручную
 			if (empty(op.content_id)) {
-				var newd = $.wManager.addDiv(op);
+				var newd = wmanager.addDiv(op);
 			}
 			
 			// Если окно должно быть в меню - создаем нужный пункт
@@ -146,14 +146,15 @@
 				
 				$('#wm_group_'+ op.group).append(_el);
 				
-				if( !isset($.wManager.windows[op.group]) ) {
-				   $.wManager.windows[op.group] = [];
+				if( !isset(wmanager.windows[op.group]) ) {
+				   wmanager.windows[op.group] = [];
 				}
-				$.wManager.windows[op.group].push(wid);
+				wmanager.windows[op.group].push(wid);
 			}
 			
 			// Проверка позиции окна
-			var pos = $.wManager.checkPos(op);
+			var pos = wmanager.checkPos(op);
+			
 			// Создаем сам диалог!
 			$('#'+wid).dialog({
 					bgiframe: true,
@@ -196,7 +197,7 @@
 								title: 'Свернуть',
 								func: function() {
 									op.minimize();
-									$.wManager.minimize(wid);
+									wmanager.minimize(wid);
 									op.stateChanged();
 								}
 							});
@@ -212,7 +213,7 @@
 						}
 						$.extend(winButtons, op.controlButton);
 						
-						$.wManager.addButton(winButtons, wid);
+						wmanager.addButton(winButtons, wid);
 						
 						var win = $('.'+ wid);
 						win.attr('icon', op.icon);
@@ -234,7 +235,7 @@
 					close: function(event) {
 						op.stateChanged();
 						op.close(event);
-						$.wManager.close(wid);
+						wmanager.close(wid);
 					},
 					beforeclose: function(event) {
 						if ($('#wm_confirm_'+ op.wid).length != 0 ) {
@@ -244,7 +245,7 @@
 						if( op.confirmClose === true) {
 							var msg = $('<div>'+ op.confirmCloseMsg + '</div>');
 							var ok = $('<input type="button" value="'+ op.confirmCloseOk + '" />')
-								.click( function() { $.wManager.close(wid); $('#wm_confirm_'+ op.wid).remove(); });
+								.click( function() { wmanager.close(wid); $('#wm_confirm_'+ op.wid).remove(); });
 							var cancel = $('<input type="button" value="'+ op.confirmCloseCancel + '" />')
 								.click( function() { $('#wm_confirm_'+ op.wid).remove(); });
 							msg = msg.add(ok).add(cancel);
@@ -254,7 +255,7 @@
 							var top = parseInt( pos.top, 10) + 22;
 							var left = parseInt( pos.left, 10) + $('.'+ op.wid).width() - 50;
 							$('<div style="top:'+ top +'px; left:'+ left +'px; width: 110px; z-index: ' + zIndex  + '" class="wm_tooltip" id="wm_confirm_'+ op.wid +'"></div>')
-								.html(msg).appendTo($.wManager.globals.winsHolder);
+								.html(msg).appendTo(wmanager.globals.winsHolder);
 							
 							return false;
 						}
@@ -284,14 +285,39 @@
 				if ( $.isFunction(op.open) )
 					op.open(wid, win);
 				
-				return op;
+				return {
+					wid: wid,
+					win: win,
+					minimize: function() {
+						wmanager.minimize(this.wid);
+					},
+					close: function() {
+						wmanager.close(this.wid);
+					},
+					show: function() {
+						wmanager.focus(this.wid);
+					},
+					focus: function() {
+						wmanager.focus(this.wid)
+					},
+					showError: function(text, timer) {
+						wmanager.showError(this.wid, text, timer);
+					},
+					showMsg: function(text, timer) {
+						wmanager.showMsg(this.wid, text, timer);
+					},
+					hideMsgs: function() {
+						wmanager.hideMsgs(this.wid);
+					}
+					
+				};
 		},
 		loadAjax: function(url, op) {
 			if( typeof(op) == 'undefined' )
 				op = {};
 			
 			op.ajaxURL = url;
-			$.wManager.openWin(op);
+			wmanager.openWin(op);
 			
 		},
 		loadJSON: function(url, op) {
@@ -300,7 +326,7 @@
 			
 			op.ajaxURL = url;
 			op.ajaxDataType = 'json';
-			$.wManager.openWin(op);
+			wmanager.openWin(op);
 			
 		},
 		loading: function(wid) {
@@ -332,8 +358,51 @@
 			$('.'+ wid).css(pos);
 			return true;
 		},
+		showError: function(wid, msg, timer) {
+			wmanager.showInfo(wid, msg, timer, 'ui-state-error');
+		},
+		hideErrors: function(id) {
+		 	$('.'+ id).find('.wmanager_error').remove();
+		},
+		showMsg: function(wid, msg, timer, css_class) {
+			
+			var ret, win = $('#'+ wid);
+			wmanager.hideMsgs(wid);
+			
+			var msgs = [];
+			if( !$.isArray(msg) ) msgs.push(msg);			
+			else msgs = msg;			
+			
+			css_class = empty(css_class) ? 'ui-state-highlight' : css_class;
+			timer = !isset(timer) ? 5000 : timer;
+			
+			$.each(msgs, function(k, v) {
+				ret = $('<div class="wmanager_info '+ css_class +'"></div>').html(v).prependTo(win);
+			});
+			// какогото х@я ширина на 10 пкс больше. Обрезаем.
+			ret.width(win.width() - 10);
+			
+			// Hide on timer
+			if( timer !== false ) {
+				setTimeout(function() {
+					wmanager.hideMsgs(wid);
+				}, timer);
+			}
+			
+			return ret;
+		
+		},
+		hideMsgs: function(wid, doRemove) {
+			if( empty(doRemove) || doRemove == false ) {
+				$('#'+ wid).parent().find('.trdata_info').hide();
+			}
+			else {
+				$('#'+ wid).parent().find('.trdata_info').remove();
+			}
+		 	
+		},
 		addButton: function(btn, wid) {
-			var addHTML = $('#ui-dialog-title-'+ wid).parent('.ui-dialog-titlebar');
+			var addHTML = $('#ui-dialog-title-'+ wid);
 			$.each( btn, function(i, v) {
 				
 				if( v == null ) {
@@ -363,11 +432,11 @@
 			op.left = parseInt(op.left, 10);
 			op.top = parseInt(op.top, 10);
 			
-			if( isset( $.wManager.winArrByLeft[op.left]) ) {
+			if( isset( wmanager.winArrByLeft[op.left]) ) {
 				op.left += 25;
 				op.top += 25;
 				// Проверяем новые значения
-				return $.wManager.checkPos(l, t);
+				return wmanager.checkPos(l, t);
 			}
 			else {
 				return [op.left, op.top];
@@ -380,9 +449,9 @@
 			t = Math.floor( ( $(document).height() - h ) / 2 );
 			
 			// Проверка, есть ли окно с таким-же позиционированием
-			ret = $.wManager.checkPos(l, t);
+			ret = wmanager.checkPos(l, t);
 			
-			$.wManager.winArrByLeft[ret[0]] = true;
+			wmanager.winArrByLeft[ret[0]] = true;
 			
 			return ret;
 		},
@@ -395,7 +464,7 @@
 				$('.'+wid).remove();
 			}
 			
-			$.wManager.defaults.stateChanged();
+			wmanager.defaults.stateChanged();
 		},
 		minimize: function(wid) {
 			$('.'+ wid).find('#'+ wid).toggle();
@@ -403,11 +472,11 @@
 		closeAll: function() {
 			var wins = $('.wM-win');
 			$.each(wins, function(k, v) {
-				$.wManager.close( $(v).attr('wid') );
+				wmanager.close( $(v).attr('wid') );
 			});
 		},
 		extend_op: function(wid, opts) {
-			$.wManager.wins_op[wid] = opts;
+			wmanager.wins_op[wid] = opts;
 		},
 		serialize: function() {
 			var wins = $('.wM-win:visible');
@@ -466,7 +535,7 @@
 //fbug('restore')
 //fbug(ar)
 			try {
-				if ( !empty(ar) && trdata.utils.is_array(ar) && isset(ar.wins) )
+				if ( !empty(ar) && is_array(ar) && isset(ar.wins) )
 				{
 					$.each(ar.wins, function(k, v) {
 						if (!empty(v)) {
@@ -485,7 +554,7 @@
 							};
 							
 							// Задаем опции для окна
-							$.wManager.extend_op(d.wid, d);
+							wmanager.extend_op(d.wid, d);
 							setTimeout(function(){
 								trdata.manage_wins(d.winCode, d.createParams);
 							}, 200 + (100 * k));
@@ -508,110 +577,98 @@
 			}
 	},
 	utils: {
-	    genId: function genId(start) {
+		genId: function genId(start) {
             var nid = start +'_'+ Math.floor(Math.random() * 1000);
             if( $(nid).length === 0 ) {
                 return nid;
             }
             else {
-                return $.wManager.utils.genId();
+                return wmanager.utils.genId();
             }
-        }
+		},
     }
-
+	
+	
 };
+
+/* PHPJS functions */
+var empty = function(mixed_var) {
+		    // http://kevin.vanzonneveld.net
+		    // +   original by: Philippe Baumann
+		    // +      input by: Onno Marsman
+		    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		    // +      input by: LH
+		    // +   improved by: Onno Marsman
+		    // +   improved by: Francesco
+		    // +   improved by: Marc Jansen
+		    // +   input by: Stoyan Kyosev (http://www.svest.org/)
+		    // *     example 1: empty(null);
+		    // *     returns 1: true
+		    // *     example 2: empty(undefined);
+		    // *     returns 2: true
+		    // *     example 3: empty([]);
+		    // *     returns 3: true
+		    // *     example 4: empty({});
+		    // *     returns 4: true
+		    // *     example 5: empty({'aFunc' : function () { alert('humpty'); } });
+		    // *     returns 5: false
+		    
+		    var key;
+		    
+		    if (mixed_var === "" ||
+		        mixed_var === 0 ||
+		        mixed_var === "0" ||
+		        mixed_var === null ||
+		        mixed_var === false ||
+		        typeof mixed_var === 'undefined'
+		    ){
+		        return true;
+		    }
+		
+		    if (typeof mixed_var == 'object') {
+		        for (key in mixed_var) {
+		            return false;
+		        }
+		        return true;
+		    }
+		
+		    return false;
+	};
+	
+var isset = function() {
+// http://kevin.vanzonneveld.net
+// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+// +   improved by: FremyCompany
+// +   improved by: Onno Marsman
+// *     example 1: isset( undefined, true);
+// *     returns 1: false
+// *     example 2: isset( 'Kevin van Zonneveld' );
+// *     returns 2: true
+		    
+		    var a=arguments, l=a.length, i=0;
+		    
+		    if (l===0) {
+		        throw new Error('Empty isset'); 
+		    }
+		    
+		    while (i!==l) {
+		        if (typeof(a[i])=='undefined' || a[i]===null) { 
+		            return false; 
+		        } else { 
+		            i++; 
+		        }
+		    }
+		    return true;
+		};
+		
+var fbug = function(s) {
+
+		console.log(s);
+}
+	
 })(jQuery);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* PHPJS functions */
-function empty (mixed_var) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Philippe Baumann
-    // +      input by: Onno Marsman
-    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +      input by: LH
-    // +   improved by: Onno Marsman
-    // +   improved by: Francesco
-    // +   improved by: Marc Jansen
-    // +   input by: Stoyan Kyosev (http://www.svest.org/)
-    // *     example 1: empty(null);
-    // *     returns 1: true
-    // *     example 2: empty(undefined);
-    // *     returns 2: true
-    // *     example 3: empty([]);
-    // *     returns 3: true
-    // *     example 4: empty({});
-    // *     returns 4: true
-    // *     example 5: empty({'aFunc' : function () { alert('humpty'); } });
-    // *     returns 5: false
-    
-    var key;
-    
-    if (mixed_var === "" ||
-        mixed_var === 0 ||
-        mixed_var === "0" ||
-        mixed_var === null ||
-        mixed_var === false ||
-        typeof mixed_var === 'undefined'
-    ){
-        return true;
-    }
-
-    if (typeof mixed_var == 'object') {
-        for (key in mixed_var) {
-            return false;
-        }
-        return true;
-    }
-
-    return false;
-}
-function isset () {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: FremyCompany
-    // +   improved by: Onno Marsman
-    // *     example 1: isset( undefined, true);
-    // *     returns 1: false
-    // *     example 2: isset( 'Kevin van Zonneveld' );
-    // *     returns 2: true
-    
-    var a=arguments, l=a.length, i=0;
-    
-    if (l===0) {
-        throw new Error('Empty isset'); 
-    }
-    
-    while (i!==l) {
-        if (typeof(a[i])=='undefined' || a[i]===null) { 
-            return false; 
-        } else { 
-            i++; 
-        }
-    }
-    return true;
-}
-
-function fbug(s) {
-	console.log(s);
-}
 
 
 

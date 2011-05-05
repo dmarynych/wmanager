@@ -37,7 +37,7 @@
 			$('#footer').css({top: $(document).height() - 32});
 			
 			// global vars
-			$.wManager.set_global({
+			wmanager.set_global({
 				iconsPath: '../../icons/'
 			});
 				
@@ -54,7 +54,7 @@
 		});
 		
 		function video() {
-			$.wManager.openWin({
+			win = wmanager.openWin({
 				'width': 590,
 				'height': 400,
 				'left': 170,
@@ -66,6 +66,8 @@
 					win.html('<iframe width="560" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
 			});
+			
+			//win.close();
 		}
 		
 		function imgs() {
