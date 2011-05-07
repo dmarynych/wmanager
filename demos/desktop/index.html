@@ -8,7 +8,7 @@
 	
 		<script type="text/javascript" src="../../js/jquery-1.6.js"></script>
 		<script type="text/javascript" src="../../js/jquery-ui-1.8.9.custom.min.js"></script>
-		<script type="text/javascript" src="../../js/wmanager.js"></script>
+		<script type="text/javascript" src="../../js/wmanager_new.js"></script>
 	</head>
 	<body>
 		<div id="wrap">
@@ -17,7 +17,7 @@
 			</div>
 			<div id="menu" class="ui-helper-hidde"> 
 				<ul>
-					<li onclick="video()"><a href="#">Browser</a></li>
+					<li onclick="video()"><a href="#">Youtube video</a></li>
 					<li onclick="imgs()"><a href="#">Image viewer</a></li>
 					<li onclick="task_manager()"><a href="#">Table</a></li>
 				</ul>
@@ -32,8 +32,14 @@
 
 		
 		<script type="text/javascript">
+		fbug = console.log;
 		$(function() {
-			
+			wmanager.lang.ru = {
+				'close_confirm': 'Вы уверены?',
+				'close_confirm_ok': 'Зыкрыть',
+				'close_confirm_cancel': 'Отмена'
+			};
+	
 			$('#footer').css({top: $(document).height() - 32});
 			
 			// global vars
@@ -54,7 +60,7 @@
 		});
 		
 		function video() {
-			win = wmanager.openWin({
+			win = wmanager.open({
 				'width': 590,
 				'height': 400,
 				'left': 170,
@@ -63,6 +69,8 @@
 				'winCode': 'friends',
 				'group': 'wins',
 				'open': function(wid, win) {
+					alert(1)
+					fbug(win)
 					win.html('<iframe width="560" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
 			});
@@ -71,7 +79,7 @@
 		}
 		
 		function imgs() {
-			$.wManager.openWin({
+			$.wManager.open({
 				'width': 590,
 				'height': 400,
 				'left': 170,
