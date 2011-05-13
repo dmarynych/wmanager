@@ -213,7 +213,7 @@
 			// Заголовок окна
 			op.rawTitle = op.title;
 			if(op.icon === true) {
-				op.title = '<img src="'+ wmanager.globals.iconsPath + op.iconName +'" align="left" class="wmanager_icon" id="wmanager_icon_'+wid+'" /><span class="wmanager_'+ wid +'_title">'+ op.title +'</span>';
+				op.title = '<img src="'+ wmanager.globals.iconsPath + op.iconName +'" align="left" class="wmanager_icon" id="wmanager_icon_'+wid+'" /><span class="wmanager_'+ wid +'_title wmanager_title_text">'+ op.title +'</span>';
 			}
 
 			//
@@ -536,8 +536,23 @@
 		return true;
 	};
 	var fbug = function(s) {
-
-		console.log(s);
+		if(typeof console != 'undefined')
+			console.log(s);
 	}
+	
+	
+	
+	
+	
+	$.widget("ui.wmanager", {
+		// default options
+		options: {
+			
+		},
+		_create: function() {
+			fbug(this)
+			wmanager.open($.extend(this.options, {content: this.element}));
+		}
+	});
 
 })(jQuery);

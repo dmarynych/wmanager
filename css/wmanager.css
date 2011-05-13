@@ -1,13 +1,19 @@
 .wmanager_win {
 	-moz-box-shadow: 2px 2px 5px #888;
 	-webkit-box-shadow: 2px 2px 5px #888;
+	
 }
+.wmanager_title_text {
+	font-size: 14px !important;
+}
+
 .wmanager_icon {
 	margin:1px 4px 0px 4px;
 	border:0;
 }
 .wmanager_win .ui-dialog-content{
 	background: !important;
+	padding: 5px !important;
 }
 .wmanager_win .ui-dialog-titlebar{
 	padding: 2px !important;

@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>wManager test</title>
-		<link rel="stylesheet" href="../../css/Aristo/jquery-ui-1.8.7.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/absolution/jquery.ui.all.css" type="text/css" />
 		<link rel="stylesheet" href="../../css/wmanager.css" type="text/css" />
 		<link rel="stylesheet" href="style.css" type="text/css" />
 	
@@ -13,7 +13,6 @@
 	<body>
 		<div id="wrap"> 
 			<div id="main">
-				test
 			</div>
 			<div id="menu" class="ui-helper-hidde"> 
 				<ul>
@@ -21,6 +20,10 @@
 					<li onclick="imgs()"><a href="#">Image viewer</a></li>
 					<li onclick="task_manager()"><a href="#">Table</a></li>
 				</ul>
+			</div>
+			
+			<div id="window" title="title fuck yeah">
+				bla bla
 			</div>
 		</div>
 
@@ -61,17 +64,16 @@
 		
 		function video() {
 			win = wmanager.open({
-				'width': 590,
-				'height': 400,
+				'width': 580,
+				'height': 390,
 				'left': 170,
 				'top': 100,
 				'title': 'Test window',
 				'winCode': 'friends',
 				'group': 'wins',
 				'open': function(wid, win) {
-					alert(1)
 					fbug(win)
-					win.html('<iframe width="560" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
+					win.html('<iframe width="570" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
 			});
 			
