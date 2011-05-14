@@ -27,7 +27,8 @@
 			},
 			iconsPath: 'icons/',
 			lang: 'en',
-			stateChanged: function() {},
+			stateChanged: function() {
+			},
 			taskbar: '#taskbar'
 		},
 		/**
@@ -114,64 +115,56 @@
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			beforeclose: function() {
-			},
+			beforeclose: false,
 			/**
 			 * Callback, after window closing
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			close: function() {
-			},
+			close: false,
 			/**
 			 * Callback, for window resize event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			resize: function() {
-			},
+			resize: false,
 			/**
 			 * Callback, for window resize start event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			resizeStart: function() {
-			},
+			resizeStart: false,
 			/**
 			 * Callback, for window resize stop event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			resizeStop: function() {
-			},
+			resizeStop: false,
 			/**
 			 * Callback, for window drag event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			drag: function() {
-			},
+			drag: false,
 			/**
 			 * Callback, for window drag stop event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			dragStop: function() {
-			},
+			dragStop: false,
 			/**
 			 * Callback, for window drag start event
 			 * @param wid {number} Window id
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			dragStart: function() {
-			}
+			dragStart: false,
 		},
 		// array holds left positions of wins, to permit opening in same place
 		winArrByLeft: [],
@@ -180,10 +173,11 @@
 		// Object, holds all windows instances
 		windows: {},
 		addDiv: function(op) {
-			var ret = $('<div />').attr({
+			var ret = $('<div></div>').attr({
 				'id': op.wid,
 				'title': op.title
 			}).append(op.content).appendTo(wmanager.globals.winsHolder);
+
 			return ret;
 		},
 		open: function(options) {
@@ -230,11 +224,58 @@
 
 			// Проверка позиции окна
 			var pos = wmanager.checkPos(op);
-			
+
 			if ($.isFunction(op.beforeOpen)) {
 				op.beforeOpen(wid, win);
 			}
-			
+
+			var win = $('#'+ wid);
+			/**
+			 * Window instance, with basic methods
+			 */
+			var ret = {
+				wid: wid,
+				win: win,
+				hide: function() {
+					wmanager.hide(this.wid);
+				},
+				close: function() {
+					wmanager.close(this.wid);
+				},
+				show: function() {
+					wmanager.focus(this.wid);
+				},
+				focus: function() {
+					wmanager.focus(this.wid)
+				},
+				showError: function(text, timer) {
+					wmanager.showError(this.wid, text, timer);
+				},
+				showMsg: function(text, timer, css_class) {
+					wmanager.showMsg(this.wid, text, timer, css_class);
+				},
+				hideMsgs: function() {
+					wmanager.hideMsgs(this.wid);
+				},
+				loading: function() {
+					wmanager.loading(this.wid);
+				},
+				stopLoading: function() {
+					wmanager.stopLoading(this.wid);
+				},
+				addButton: function(button) {
+					wmanager.addButton(this.wid, button);
+				},
+				removeButton: function(button_id) {
+					wmanager.removeButton(this.wid, button_id);
+				}
+			};
+
+			//опции сохраняем в глобальный массив для доступа и изменения извне
+			wmanager.wins_op[wid] = op;
+			// array of window instatnces
+			wmanager.windows[wid] = ret;
+
 			// Создаем сам диалог!
 			$('#'+wid).dialog({
 				bgiframe: true,
@@ -253,55 +294,57 @@
 				draggable: op.draggable,
 
 				resize: function(e, ui) {
-					op.resize(e, ui);
+					if($.isFunction(op.resize)) {
+						op.resize(e, ui);
+
+					}
 				},
 				resizeStop: function(e, ui) {
-					op.resizeStop(e, ui);
-					wmanager.globals.stateChanged();
+					if($.isFunction(op.resizeStop)) {
+						op.resizeStop(e, ui);
+						wmanager.globals.stateChanged();
+					}
 				},
 				resizeStart: function(e, ui) {
-					op.resizeStart(e, ui);
+					if($.isFunction(op.resizeStart)) {
+						op.resizeStart(e, ui);
+						wmanager.globals.stateChanged();
+					}
 				},
-				
 				drag: function() {
-					op.drag();
-					wmanager.globals.stateChanged();
+					if($.isFunction(op.drag)) {
+						op.drag(e, ui);
+						wmanager.globals.stateChanged();
+					}
 				},
 				dragStop: function() {
-					op.dragStop();
-					wmanager.globals.stateChanged();
+					if($.isFunction(op.dragStop)) {
+						op.dragStop(e, ui);
+						wmanager.globals.stateChanged();
+					}
 				},
 				dragStart: function() {
-					op.dragStart();
+					if($.isFunction(op.dragStart)) {
+						op.dragStart(e, ui);
+						wmanager.globals.stateChanged();
+					}
 				},
-				
 				open: function() {
 
-					/*var winButtons = [];
+					var winButtons = [];
 					if (op.buttMinimize === true) {
 						winButtons.push({
-							icon: 'minus',
-							title: 'Свернуть',
-							func: function() {
-								op.minimize();
+							icon: 'minusthick',
+							title: wmanager.l('hide_button_label'),
+							click: function() {
 								wmanager.minimize(wid);
-								op.stateChanged();
-							}
-						});
-					}
-					if (op.buttSettings === true) {
-						winButtons.push({
-							icon: 'gear',
-							title: 'Настройки окна',
-							func: function() {
-								op.settingsClick();
 							}
 						});
 					}
 					$.extend(winButtons, op.controlButton);
-
-					wmanager.addButton(winButtons, wid);*/
-
+					wmanager.addButton(wid, winButtons);
+					
+					
 					var win = $('.'+ wid);
 					var wnd_content = win.find('#'+ wid);
 					win.data({
@@ -312,45 +355,37 @@
 						createParams: op.createParams
 					});
 					win.draggable('option', 'containment', wmanager.globals.winsHolder);
-					
+
 					// Если это ajax запрос - делаем его
 					if ( isset(op.ajaxOptions) && isset(op.ajaxOptions.url) && !empty(op.ajaxOptions.url) ) {
 						// Индикатор загрузки
-						$.wManager.loading(wid);
-						
+						wmanager.loading(op.wid);
+
 						$.ajax($.extend(op.ajaxOptions, {
-								success: function(data){							
-									if ((typeof(data) != 'undefined') && (data != null)) {
-										if ($.isFunction(op.ajaxLoaded)) {
-											op.ajaxLoaded(data, wid, wnd_content);
-										}
+							success: function(data) {
+								if ((typeof(data) != 'undefined') && (data != null)) {
+									if ($.isFunction(op.open)) {
+										op.open(data, wid, wnd_content);
 									}
-									
-									$.wManager.stopLoading(wid);
 								}
-							})
+
+								wmanager.stopLoading(op.wid);
+							}
+						})
 						);
+					} else {
+						if ($.isFunction(op.open)) {
+							op.open(wid, wnd_content);
+						}
 					}
-					
+
 					// колбек на открытие окошка
-					if ($.isFunction(op.open)) {
-						op.open(wid, wnd_content);
-					}
+
 				},
 				focus: function() {
-					// Выделяем кнопку активного окна на таскбаре
-					$('.wM-collWin').removeClass('wM-collWin-active');
-					$('#coll_'+wid).addClass('wM-collWin-active');
-
-					// Затмнение всех окон, кроме активного
-					$('.wM-win').removeClass('wM-win-active');
-					$('.'+wid).addClass('wM-win-active');
-
-					wmanager.globals.stateChanged();
+					wmanager.focus(wid);
 				},
-				close: function(event) {
-					wmanager.globals.stateChanged();
-					op.close(event);
+				close: function() {
 					wmanager.close(wid);
 				},
 				beforeclose: function(event) {
@@ -359,24 +394,29 @@
 					}
 
 					if( op.confirmClose === true) {
-						var msg = $('<div>'+ op.confirmCloseMsg + '</div>');
-						var ok = $('<input type="button" value="'+ op.confirmCloseOk + '" />')
+						var msg = $('<div><div>'+ wmanager.l('close_confirm') + '</div></div>');
+						var ok = $('<input type="button" value="'+ wmanager.l('close_confirm_ok') +'" />')
 						.click( function() {
 							wmanager.close(wid);
 							$('#wm_confirm_'+ op.wid).remove();
 						});
-						var cancel = $('<input type="button" value="'+ op.confirmCloseCancel + '" />')
+						var cancel = $('<input type="button" value="'+ wmanager.l('close_confirm_cancel') +'" />')
 						.click( function() {
 							$('#wm_confirm_'+ op.wid).remove();
 						});
-						msg = msg.add(ok).add(cancel);
+						msg.append(ok).append(cancel);
 
-						var zIndex = +win.css('zIndex') + 1;
-						var pos = $('.'+ op.wid).offset();
-						var top = parseInt( pos.top, 10) + 22;
-						var left = parseInt( pos.left, 10) + $('.'+ op.wid).width() - 50;
-						$('<div style="top:'+ top +'px; left:'+ left +'px; width: 110px; z-index: ' + zIndex  + '" class="wm_tooltip" id="wm_confirm_'+ op.wid +'"></div>')
-						.html(msg).appendTo(wmanager.globals.winsHolder);
+						var win = $('.'+ op.wid);
+						var zIndex = win.css('zIndex') + 1;
+
+
+						$('<div style="z-index: ' + zIndex  + '" class="wmanager_tooltip" id="wm_confirm_'+ op.wid +'"></div>')
+							.html(msg).appendTo(wmanager.globals.winsHolder).position({
+							    my: 'left top',
+							    at: 'right top',
+							    of: win,
+							    offset: '-40 30'
+							});
 
 						return false;
 					}
@@ -385,44 +425,232 @@
 				}
 			});
 
-			var win = $('#'+ wid);
-			/**
-			 * Window instance, with basic methods
-			 */
-			var ret = {
-				wid: wid,
-				win: win,
-				minimize: function() {
-					wmanager.minimize(this.wid);
-				},
-				close: function() {
-					wmanager.close(this.wid);
-				},
-				show: function() {
-					wmanager.focus(this.wid);
-				},
-				focus: function() {
-					wmanager.focus(this.wid)
-				},
-				showError: function(text, timer) {
-					wmanager.showError(this.wid, text, timer);
-				},
-				showMsg: function(text, timer) {
-					wmanager.showMsg(this.wid, text, timer);
-				},
-				hideMsgs: function() {
-					wmanager.hideMsgs(this.wid);
-				}
-			};
-			
-			//опции сохраняем в глобальный массив для доступа и изменения извне
-			wmanager.wins_op[wid] = op;
-			// array of window instatnces
-			wmanager.windows[wid] = ret;
 			return ret;
 		},
+		loadAjax: function(url, op) {
+			if( !isset(op) ) {
+				op = {};
+			}
+			if( !isset(op.ajaxOptions) ) {
+				op.ajaxOptions = {};
+			}
+
+			op.ajaxOptions.url = url;
+			op.ajaxOptions.dataType = 'html';
+
+			return wmanager.open(op);
+		},
+		loadJSON: function(url, op) {
+			if( !isset(op) ) {
+				op = {};
+			}
+			if( !isset(op.ajaxOptions) ) {
+				op.ajaxOptions = {};
+			}
+
+			op.ajaxOptions.url = url;
+			op.ajaxOptions.dataType = 'json';
+
+			return wmanager.open(op);
+		},
+		loading: function(wid) {
+			fbug(wid)
+			var winobj = wmanager.getWin(wid);
+			fbug(winobj)
+			winobj.win.parent().find('.wmanager_icon').attr('src', wmanager.globals.iconsPath +'loading.gif');
+		},
+		stopLoading: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+			fbug([winobj, op])
+			winobj.win.parent().find('.wmanager_icon').attr('src', wmanager.globals.iconsPath + op.iconName);
+		},
+		focus: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+
+			// focus callback
+			if($.isFunction(op.focus) && op.focus(winobj) !== false) {
+				var win = winobj.win.parent();
+
+				winobj.win.dialog('moveToTop').parent().show();
+
+				// Выделяем кнопку активного окна на таскбаре
+				$('.wM-collWin').removeClass('wM-collWin-active');
+				$('#coll_'+ wid).addClass('wM-collWin-active');
+
+				// Затмнение всех окон, кроме активного
+				winobj.win.removeClass('wM-win-active');
+				$('.'+ wid).addClass('wM-win-active');
+
+				wmanager.globals.stateChanged();
+			}
+		},
 		/**
-		 * Method, for checking new window position. If, on given position, already exists window - it generates new coords
+		 * Closes window
+		 * @param {wid} Windows id
+		 * @return boolean
+		 */
+		close: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+
+			// close callback
+			if($.isFunction(op.close) && op.close(winobj) !== false) {
+				winobj.win.hide();
+
+				wmanager.globals.stateChanged();
+			}
+		},
+		destroy: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+
+			// destroy callback
+			if($.isFunction(op.destroy) && op.destroy(winobj) !== false) {
+				winobj.win.remove();
+
+				wmanager.globals.stateChanged();
+			}
+		},
+		hide: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+
+			// hide callback
+			if(op.hide(winobj) !== false) {
+				winobj.win.hide();
+
+				wmanager.globals.stateChanged();
+			}
+		},
+		closeAll: function() {
+			var wins = $('.wmanager_win');
+			$.each(wins, function(k, v) {
+				wmanager.close( $(v).attr('wid') );
+			});
+		},
+		/*
+		 Пример
+		  wmanageraddButton([{
+		        icon: 'colors',
+		        title: 'Настройки окна',
+		        func: function() {
+		         wmanagersettingsMenu(wid, op);
+		        }
+		    }], wid);
+		 */
+		addButton: function(wid, btn) {
+			if(!$.isArray(btn)) {
+				btn = [btn];
+			}
+			
+			var addHTML = $('#ui-dialog-title-'+ wid);
+			
+			$.each( btn, function(i, v) {
+				
+				if( empty(v)) {
+					return;
+				}
+				if ( isset(v) && isset(v.beforeRender) && v.beforeRender() !== true) {
+					return;
+				}
+				//добавим возможность задать id кнопки
+				if (!isset(v.id) ) {
+					v.id = wmanager.utils.genId('wnd_btn');
+				}
+				
+				// временно - кол-во кнопок уже созданных
+				var num = $('#ui-dialog-title-'+ wid).find('a').length;
+				var marg = (num*23 + 23);
+				var tit = isset(v.title) ? v.title : '';
+				$('<a href="#"></a>')
+					.addClass('ui-dialog-titlebar-'+ v.icon +' ui-dialog-titlebar-close ui-corner-all wmanager_title_button wm_title_button_'+ v.icon)
+					.attr('title', tit)
+					.css('margin-right', marg)
+					.html('<span class="ui-icon ui-icon-'+ v.icon +'" id="'+v.id+'" />')
+					.click(v.func).mouseover(function(){
+						$(this).addClass('ui-state-hover');
+						return false;
+					}).mouseout(function(){
+						$(this).removeClass('ui-state-hover');
+					}).appendTo(addHTML);
+			});
+		},
+		removeButton: function(wid, id) {
+			var winobj = wmanager.getWin(wid);
+			winobj.win.parent().find('.wm_title_button_'+ id).remove();
+		},
+		showError: function(wid, msg, timer) {
+			wmanager.showMsg(wid, msg, timer, 'ui-state-error wmanager_error');
+		},
+		hideErrors: function(id) {
+		 	$('.'+ id).find('.wmanager_error').remove();
+		},
+		showMsg: function(wid, msg, timer, css_class) {
+			var winobj = wmanager.getWin(wid);
+			var win = winobj.win;
+			//var op = wmanager.getOp(wid);
+			
+			var msgs = [], ret;
+			if( !$.isArray(msg) ) {
+				msgs.push(msg);
+			}
+			else {
+				msgs = msg;
+			}
+			
+			css_class = empty(css_class) ? 'ui-state-highlight' : css_class;
+			timer = !isset(timer) ? 5000 : timer;
+			var num = win.find('.wmanager_info').length;
+			
+			$.each(msgs, function(k, v) {
+				ret = $('<div class="wmanager_info '+ css_class +'"></div>')
+					.css('top', num*20)
+					.html(v)
+					.prependTo(win);
+			});
+			
+			
+			
+			// какогото х@я ширина на 10 пкс больше. Обрезаем.
+			ret.width(win.width() - 10)
+				.click(function() {
+					$(this).remove();
+				});
+			
+			// Hide on timer
+			if( timer !== false ) {
+				setTimeout(function() {
+					ret.remove();
+					//wmanager.hideMsgs(wid);
+				}, timer);
+			}
+			
+			ret.fadeIn(300);
+			return ret;
+		
+		},
+		hideMsgs: function(wid, doRemove) {
+			if( empty(doRemove) || doRemove === false ) {
+				$('#'+ wid).parent().find('.wmanager_info').remove();
+			}
+			else {
+				$('#'+ wid).parent().find('.wmanager_info').remove();
+			}
+		 	
+		},
+		extend_op: function(wid, op) {
+			wmanager.wins_op[wid] = op;
+		},
+		/*resizeHeight: function(wid, h) {
+		$('.'+ wid).css('height', h);
+		},
+		resizeWidth: function(wid, w) {
+		$('.'+ wid).css('width', w);
+		},*/
+		/**
+		 * Method, for checking new window position. If, window already exists, on given position  - it generates new coords
 		 * @param {object} Windows properties
 		 * @return boolean
 		 */
@@ -430,13 +658,38 @@
 			op.left = parseInt(op.left, 10);
 			op.top = parseInt(op.top, 10);
 
-			if( isset( wmanager.winArrByLeft[op.left]) ) {
+			if( isset( wmanager.winArrByLeft[op.left +'_'+ op.top]) ) {
 				op.left += 25;
 				op.top += 25;
 				// Проверяем новые значения
-				return wmanager.checkPos(l, t);
+				return wmanager.checkPos(op);
 			} else {
+				wmanager.winArrByLeft[op.left +'_'+ op.top] = op.wid;
 				return [op.left, op.top];
+			}
+		},
+		/**
+		 * Method, for getting window object
+		 * @param {wid} Window id
+		 * @return object
+		 */
+		getWin: function(wid) {
+			if(wmanager.windowExists(wid)) {
+				return wmanager.windows[wid];
+			} else {
+				return false;
+			}
+		},
+		/**
+		 * Method, for getting window options
+		 * @param {wid} Window id
+		 * @return object
+		 */
+		getOp: function(wid) {
+			if(wmanager.windowExists(wid)) {
+				return wmanager.wins_op[wid];
+			} else {
+				return false;
 			}
 		},
 		/**
@@ -457,15 +710,25 @@
 				}
 			}
 		},
+		l: function(s) {
+			var lang = wmanager.lang[wmanager.globals.lang];
+			if( isset(lang[s]) ) {
+				return lang[s];
+			}
+			else {
+				return s;
+			}
+		},
 		lang: {
 			en: {
 				'close_confirm': 'Are you sure?',
 				'close_confirm_ok': 'Close',
-				'close_confirm_cancel': 'Cancel'
+				'close_confirm_cancel': 'Cancel',
+				'hide_button_label': 'Hide'
 			}
 		}
 	};
-	
+
 	/* PHPJS functions */
 	var empty = function(mixed_var) {
 		// http://kevin.vanzonneveld.net
@@ -477,16 +740,6 @@
 		// +   improved by: Francesco
 		// +   improved by: Marc Jansen
 		// +   input by: Stoyan Kyosev (http://www.svest.org/)
-		// *     example 1: empty(null);
-		// *     returns 1: true
-		// *     example 2: empty(undefined);
-		// *     returns 2: true
-		// *     example 3: empty([]);
-		// *     returns 3: true
-		// *     example 4: empty({});
-		// *     returns 4: true
-		// *     example 5: empty({'aFunc' : function () { alert('humpty'); } });
-		// *     returns 5: false
 
 		var key;
 
@@ -509,16 +762,11 @@
 
 		return false;
 	};
-	
 	var isset = function() {
 		// http://kevin.vanzonneveld.net
 		// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 		// +   improved by: FremyCompany
 		// +   improved by: Onno Marsman
-		// *     example 1: isset( undefined, true);
-		// *     returns 1: false
-		// *     example 2: isset( 'Kevin van Zonneveld' );
-		// *     returns 2: true
 
 		var a=arguments, l=a.length, i=0;
 
@@ -539,19 +787,16 @@
 		if(typeof console != 'undefined')
 			console.log(s);
 	}
-	
-	
-	
-	
-	
 	$.widget("ui.wmanager", {
 		// default options
 		options: {
-			
+
 		},
 		_create: function() {
 			fbug(this)
-			wmanager.open($.extend(this.options, {content: this.element}));
+			wmanager.open($.extend(this.options, {
+				content: this.element
+			}));
 		}
 	});
 

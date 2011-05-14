@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="../../js/jquery-1.6.js"></script>
 		<script type="text/javascript" src="../../js/jquery-ui-1.8.9.custom.min.js"></script>
 		<script type="text/javascript" src="../../js/wmanager_new.js"></script>
+		<script type="text/javascript" src="../../js/callbacks.js"></script>
 	</head>
 	<body>
 		<div id="wrap"> 
@@ -16,14 +17,14 @@
 			</div>
 			<div id="menu" class="ui-helper-hidde"> 
 				<ul>
-					<li onclick="video()"><a href="#">Youtube video</a></li>
-					<li onclick="imgs()"><a href="#">Image viewer</a></li>
-					<li onclick="task_manager()"><a href="#">Table</a></li>
+					<li onclick="video();return false;"><a href="#">Youtube video</a></li>
+					<li onclick="twitter();return false;"><a href="#">Twitter</a></li>
+					<li onclick="task_manager();return false;"><a href="#">Table</a></li>
 				</ul>
 			</div>
 			
 			<div id="window" title="title fuck yeah">
-				bla bla
+				
 			</div>
 		</div>
 
@@ -47,7 +48,8 @@
 			
 			// global vars
 			wmanager.set_global({
-				iconsPath: '../../icons/'
+				iconsPath: '../../icons/',
+				lang: 'ru'
 			});
 				
 				
@@ -64,7 +66,7 @@
 		
 		function video() {
 			win = wmanager.open({
-				'width': 580,
+				'width': 590,
 				'height': 390,
 				'left': 170,
 				'top': 100,
@@ -72,7 +74,6 @@
 				'winCode': 'friends',
 				'group': 'wins',
 				'open': function(wid, win) {
-					fbug(win)
 					win.html('<iframe width="570" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
 			});
@@ -80,8 +81,9 @@
 			//win.close();
 		}
 		
-		function imgs() {
-			$.wManager.open({
+		function twitter() {
+			var url = 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=starkua&callback=?';
+			ww = wmanager.loadJSON(url, {
 				'width': 590,
 				'height': 400,
 				'left': 170,
@@ -89,8 +91,16 @@
 				'title': 'Test window',
 				'winCode': 'friends',
 				'group': 'wins',
-				'open': function(wid, win) {
-					win.html('555');
+				//buttSettings: true,
+				buttMinimize: true,
+				'open': function(d, wid, win) {
+					var div = $('<div></div>');
+
+					$.each(d, function(k, v) {
+						div.append('<div>'+ v.text +'</div><br>');
+					});
+					
+					win.html(div);
 				}
 			});
 		}

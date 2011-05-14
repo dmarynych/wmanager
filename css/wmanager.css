@@ -1,37 +1,58 @@
 .wmanager_win {
 	-moz-box-shadow: 2px 2px 5px #888;
 	-webkit-box-shadow: 2px 2px 5px #888;
-	
 }
 .wmanager_title_text {
 	font-size: 14px !important;
 }
-
 .wmanager_icon {
 	margin:1px 4px 0px 4px;
 	border:0;
 }
-.wmanager_win .ui-dialog-content{
+.wmanager_win .ui-dialog-content {
 	background: !important;
 	padding: 5px !important;
 }
-.wmanager_win .ui-dialog-titlebar{
+.wmanager_win .ui-dialog-titlebar {
 	padding: 2px !important;
 	background:  !important;
 	border: 0;
 }
-.wmanager_win .ui-dialog-content{
+.wmanager_win .ui-dialog-content {
 	background: !important;
 }
-.wmanager_win .ui-dialog-titlebar{
+.wmanager_win .ui-dialog-titlebar {
 	background:  !important;
 	border: 0;
 }
 .wmanager_tooltip {
 	background:none repeat scroll 0 0 #FCFCC5;
 	border:1px solid #CCCCCC;
-
+	width: auto;
 	padding:6px;
 	position:absolute;
-	z-index:20000 !important;
-	}
+	z-index:28000 !important;
+}
+.wmanager_title_button {
+	cursor: pointer;
+	height: 18px;
+	margin: -10px 0 0;
+	position: absolute;
+	right: 0.3em;
+	top: 50%;
+	width: 19px;
+	float:right;
+}
+
+.wmanager_info {
+	position: absolute;
+	left:0;
+	top:0;
+	display:none;
+	cursor:pointer;
+}
+
+
+
+
+
