@@ -3,6 +3,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>wManager test</title>
 		<link rel="stylesheet" href="../../css/absolution/jquery.ui.all.css" type="text/css" />
+		<!--<link rel="stylesheet" href="../../css/Aristo/jquery-ui-1.8.7.custom.css" type="text/css" />-->
 		<link rel="stylesheet" href="../../css/wmanager.css" type="text/css" />
 		<link rel="stylesheet" href="style.css" type="text/css" />
 	
@@ -82,6 +83,7 @@
 		}
 		
 		function twitter() {
+			
 			var url = 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=starkua&callback=?';
 			ww = wmanager.loadJSON(url, {
 				'width': 590,
@@ -91,8 +93,8 @@
 				'title': 'Test window',
 				'winCode': 'friends',
 				'group': 'wins',
-				//buttSettings: true,
 				buttMinimize: true,
+				buttRefresh: true,
 				'open': function(d, wid, win) {
 					var div = $('<div></div>');
 

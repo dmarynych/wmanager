@@ -268,6 +268,9 @@
 				},
 				removeButton: function(button_id) {
 					wmanager.removeButton(this.wid, button_id);
+				},
+				refresh: function() {
+					wmanager.refresh(this.wid);
 				}
 			};
 
@@ -337,14 +340,29 @@
 							icon: 'minusthick',
 							title: wmanager.l('hide_button_label'),
 							click: function() {
-								wmanager.minimize(wid);
+								wmanager.hide(wid);
 							}
 						});
 					}
-					$.extend(winButtons, op.controlButton);
+					if (op.buttRefresh=== true) {
+						winButtons.push({
+							icon: 'refresh',
+							title: 'refresh',
+							click: function(wid) {
+								wmanager.refresh(wid);
+							}
+						});
+
+					}
+
+					if(!$.isArray(op.controlButton)) {
+						op.controlButton = [op.controlButton];
+					}
+					$.each(op.controlButton, function(k, v) {
+						winButtons.push(v);
+					});
 					wmanager.addButton(wid, winButtons);
-					
-					
+
 					var win = $('.'+ wid);
 					var wnd_content = win.find('#'+ wid);
 					win.data({
@@ -356,28 +374,7 @@
 					});
 					win.draggable('option', 'containment', wmanager.globals.winsHolder);
 
-					// Если это ajax запрос - делаем его
-					if ( isset(op.ajaxOptions) && isset(op.ajaxOptions.url) && !empty(op.ajaxOptions.url) ) {
-						// Индикатор загрузки
-						wmanager.loading(op.wid);
-
-						$.ajax($.extend(op.ajaxOptions, {
-							success: function(data) {
-								if ((typeof(data) != 'undefined') && (data != null)) {
-									if ($.isFunction(op.open)) {
-										op.open(data, wid, wnd_content);
-									}
-								}
-
-								wmanager.stopLoading(op.wid);
-							}
-						})
-						);
-					} else {
-						if ($.isFunction(op.open)) {
-							op.open(wid, wnd_content);
-						}
-					}
+					wmanager.render(op);
 
 					// колбек на открытие окошка
 
@@ -409,14 +406,13 @@
 						var win = $('.'+ op.wid);
 						var zIndex = win.css('zIndex') + 1;
 
-
 						$('<div style="z-index: ' + zIndex  + '" class="wmanager_tooltip" id="wm_confirm_'+ op.wid +'"></div>')
-							.html(msg).appendTo(wmanager.globals.winsHolder).position({
-							    my: 'left top',
-							    at: 'right top',
-							    of: win,
-							    offset: '-40 30'
-							});
+						.html(msg).appendTo(wmanager.globals.winsHolder).position({
+							my: 'left top',
+							at: 'right top',
+							of: win,
+							offset: '-40 30'
+						});
 
 						return false;
 					}
@@ -453,16 +449,46 @@
 
 			return wmanager.open(op);
 		},
+		render: function(op) {
+			var winobj = wmanager.getWin(op.wid);
+			var op = wmanager.getOp(op.wid);
+
+			if ( isset(op.ajaxOptions) && isset(op.ajaxOptions.url) && !empty(op.ajaxOptions.url) ) {
+				if($.isFunction(op.beforeAjax) && op.beforeAjax(winobj) === false) {
+					return false;
+				}
+				
+				// Индикатор загрузки
+				wmanager.loading(op.wid);
+
+				$.ajax($.extend(op.ajaxOptions, {
+					success: function(data) {
+						if ((typeof(data) != 'undefined') && (data != null)) {
+							if ($.isFunction(op.open)) {
+								op.open(data, winobj.wid, winobj.win);
+							}
+						}
+						wmanager.stopLoading(op.wid);
+					},
+					error: function() {
+						wmanager.stopLoading(op.wid);
+					}
+				}));
+			}
+			else {
+				if ($.isFunction(op.open)) {
+					op.open(op.wid, winobj.win);
+				}
+			}
+		},
 		loading: function(wid) {
-			fbug(wid)
 			var winobj = wmanager.getWin(wid);
-			fbug(winobj)
 			winobj.win.parent().find('.wmanager_icon').attr('src', wmanager.globals.iconsPath +'loading.gif');
 		},
 		stopLoading: function(wid) {
 			var winobj = wmanager.getWin(wid);
 			var op = wmanager.getOp(wid);
-			fbug([winobj, op])
+
 			winobj.win.parent().find('.wmanager_icon').attr('src', wmanager.globals.iconsPath + op.iconName);
 		},
 		focus: function(wid) {
@@ -470,7 +496,7 @@
 			var op = wmanager.getOp(wid);
 
 			// focus callback
-			if($.isFunction(op.focus) && op.focus(winobj) !== false) {
+			if($.isFunction(op.focus) && op.focus(winobj) === false) {
 				var win = winobj.win.parent();
 
 				winobj.win.dialog('moveToTop').parent().show();
@@ -496,33 +522,45 @@
 			var op = wmanager.getOp(wid);
 
 			// close callback
-			if($.isFunction(op.close) && op.close(winobj) !== false) {
-				winobj.win.hide();
-
-				wmanager.globals.stateChanged();
+			if($.isFunction(op.close) && op.close(winobj) === false) {
+				return false;
 			}
+
+			winobj.win.parent().hide();
+			wmanager.globals.stateChanged();
 		},
 		destroy: function(wid) {
 			var winobj = wmanager.getWin(wid);
 			var op = wmanager.getOp(wid);
 
 			// destroy callback
-			if($.isFunction(op.destroy) && op.destroy(winobj) !== false) {
-				winobj.win.remove();
-
-				wmanager.globals.stateChanged();
+			if($.isFunction(op.destroy) && op.destroy(winobj) === false) {
+				return false;
 			}
+			winobj.win.parent().remove();
+			wmanager.globals.stateChanged();
 		},
 		hide: function(wid) {
 			var winobj = wmanager.getWin(wid);
 			var op = wmanager.getOp(wid);
 
 			// hide callback
-			if(op.hide(winobj) !== false) {
-				winobj.win.hide();
-
-				wmanager.globals.stateChanged();
+			if($.isFunction(op.hide) && op.hide(winobj) === false) {
+				return false;
 			}
+			winobj.win.parent().hide();
+			wmanager.globals.stateChanged();
+		},
+		refresh: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			var op = wmanager.getOp(wid);
+
+			// hide callback
+			if($.isFunction(op.refresh) && op.refresh(winobj) === false) {
+				return false;
+			}
+			
+			wmanager.render(op);
 		},
 		closeAll: function() {
 			var wins = $('.wmanager_win');
@@ -532,23 +570,23 @@
 		},
 		/*
 		 Пример
-		  wmanageraddButton([{
-		        icon: 'colors',
-		        title: 'Настройки окна',
-		        func: function() {
-		         wmanagersettingsMenu(wid, op);
-		        }
-		    }], wid);
+		 wmanageraddButton([{
+		 icon: 'colors',
+		 title: 'Настройки окна',
+		 func: function() {
+		 wmanagersettingsMenu(wid, op);
+		 }
+		 }], wid);
 		 */
 		addButton: function(wid, btn) {
 			if(!$.isArray(btn)) {
 				btn = [btn];
 			}
-			
+
 			var addHTML = $('#ui-dialog-title-'+ wid);
-			
+
 			$.each( btn, function(i, v) {
-				
+
 				if( empty(v)) {
 					return;
 				}
@@ -559,22 +597,25 @@
 				if (!isset(v.id) ) {
 					v.id = wmanager.utils.genId('wnd_btn');
 				}
-				
+
 				// временно - кол-во кнопок уже созданных
 				var num = $('#ui-dialog-title-'+ wid).find('a').length;
 				var marg = (num*23 + 23);
 				var tit = isset(v.title) ? v.title : '';
 				$('<a href="#"></a>')
-					.addClass('ui-dialog-titlebar-'+ v.icon +' ui-dialog-titlebar-close ui-corner-all wmanager_title_button wm_title_button_'+ v.icon)
-					.attr('title', tit)
-					.css('margin-right', marg)
-					.html('<span class="ui-icon ui-icon-'+ v.icon +'" id="'+v.id+'" />')
-					.click(v.func).mouseover(function(){
-						$(this).addClass('ui-state-hover');
-						return false;
-					}).mouseout(function(){
-						$(this).removeClass('ui-state-hover');
-					}).appendTo(addHTML);
+				.addClass('ui-dialog-titlebar-'+ v.icon +' ui-dialog-titlebar-close ui-corner-all wmanager_title_button wm_title_button_'+ v.icon)
+				.attr('title', tit)
+				.css('margin-right', marg)
+				.html('<span class="ui-icon ui-icon-'+ v.icon +'" id="'+v.id+'" />')
+				.click( function() {
+					v.click(wid);
+				})
+				.mouseover( function() {
+					$(this).addClass('ui-state-hover');
+					return false;
+				}).mouseout( function() {
+					$(this).removeClass('ui-state-hover');
+				}).appendTo(addHTML);
 			});
 		},
 		removeButton: function(wid, id) {
@@ -585,60 +626,60 @@
 			wmanager.showMsg(wid, msg, timer, 'ui-state-error wmanager_error');
 		},
 		hideErrors: function(id) {
-		 	$('.'+ id).find('.wmanager_error').remove();
+			$('.'+ id).find('.wmanager_error').remove();
 		},
 		showMsg: function(wid, msg, timer, css_class) {
 			var winobj = wmanager.getWin(wid);
 			var win = winobj.win;
 			//var op = wmanager.getOp(wid);
-			
+
 			var msgs = [], ret;
 			if( !$.isArray(msg) ) {
 				msgs.push(msg);
-			}
-			else {
+			} else {
 				msgs = msg;
 			}
-			
+
 			css_class = empty(css_class) ? 'ui-state-highlight' : css_class;
 			timer = !isset(timer) ? 5000 : timer;
 			var num = win.find('.wmanager_info').length;
-			
+
 			$.each(msgs, function(k, v) {
 				ret = $('<div class="wmanager_info '+ css_class +'"></div>')
-					.css('top', num*20)
-					.html(v)
-					.prependTo(win);
+				.css('top', num*20)
+				.html(v)
+				.prependTo(win);
 			});
-			
-			
-			
 			// какогото х@я ширина на 10 пкс больше. Обрезаем.
 			ret.width(win.width() - 10)
-				.click(function() {
-					$(this).remove();
-				});
-			
+			.click( function() {
+				$(this).remove();
+			});
 			// Hide on timer
 			if( timer !== false ) {
-				setTimeout(function() {
+				setTimeout( function() {
 					ret.remove();
 					//wmanager.hideMsgs(wid);
 				}, timer);
 			}
-			
+
 			ret.fadeIn(300);
 			return ret;
-		
+
 		},
 		hideMsgs: function(wid, doRemove) {
-			if( empty(doRemove) || doRemove === false ) {
-				$('#'+ wid).parent().find('.wmanager_info').remove();
-			}
-			else {
-				$('#'+ wid).parent().find('.wmanager_info').remove();
-			}
-		 	
+			var winobj = wmanager.getWin(wid);
+			winobj.win.find('.wmanager_info').remove();
+		},
+		blink: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			winobj.win.effect('pulsate', {
+				times: 50
+			}, 1000);
+		},
+		stopBlink: function(wid) {
+			var winobj = wmanager.getWin(wid);
+			winobj.win.stop();
 		},
 		extend_op: function(wid, op) {
 			wmanager.wins_op[wid] = op;
@@ -714,8 +755,7 @@
 			var lang = wmanager.lang[wmanager.globals.lang];
 			if( isset(lang[s]) ) {
 				return lang[s];
-			}
-			else {
+			} else {
 				return s;
 			}
 		},
