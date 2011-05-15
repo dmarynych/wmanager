@@ -9,8 +9,9 @@
 	
 		<script type="text/javascript" src="../../js/jquery-1.6.js"></script>
 		<script type="text/javascript" src="../../js/jquery-ui-1.8.9.custom.min.js"></script>
-		<script type="text/javascript" src="../../js/wmanager_new.js"></script>
-		<script type="text/javascript" src="../../js/callbacks.js"></script>
+		<script type="text/javascript" src="../../js/wmanager.js"></script>
+		<script type="text/javascript" src="../../js/json.js"></script>
+		<script type="text/javascript" src="../../js/store.js"></script>
 	</head>
 	<body>
 		<div id="wrap"> 
@@ -31,7 +32,7 @@
 
 		<div id="footer">
 			<a id="start_menu" onclick="return false;" href="#" style="display:block;float:left;width:40px;"><img src="i/start_here.png" border="0"></a>
-			<ul id="wm_group_wins"></ul>
+			<ul id="taskbar"></ul>
 		</div>
 
 
@@ -48,11 +49,13 @@
 			$('#footer').css({top: $(document).height() - 32});
 			
 			// global vars
-			wmanager.set_global({
+			wmanager.setGlobal({
 				iconsPath: '../../icons/',
-				lang: 'ru'
+				lang: 'ru',
+				taskbar: $('#taskbar')
 			});
-				
+			
+			wmanager.regWin('video', video);
 				
 			//openWin();
 			
@@ -63,6 +66,9 @@
 			});
 			
 			$('#start_menu').click(function() { $('#menu').toggle() });
+			
+			
+			//wmanager.restore()
 		});
 		
 		function video() {
@@ -72,8 +78,8 @@
 				'left': 170,
 				'top': 100,
 				'title': 'Test window',
-				'winCode': 'friends',
-				'group': 'wins',
+				'winCode': 'video',
+				'method': video,
 				'open': function(wid, win) {
 					win.html('<iframe width="570" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
@@ -95,6 +101,7 @@
 				'group': 'wins',
 				buttMinimize: true,
 				buttRefresh: true,
+				'method': twitter,
 				'open': function(d, wid, win) {
 					var div = $('<div></div>');
 
