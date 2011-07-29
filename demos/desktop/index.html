@@ -21,7 +21,7 @@
 				<ul>
 					<li onclick="video();return false;"><a href="#">Youtube video</a></li>
 					<li onclick="twitter();return false;"><a href="#">Twitter</a></li>
-					<li onclick="task_manager();return false;"><a href="#">Table</a></li>
+					<li onclick="basic_win();return false;"><a href="#">Win</a></li>
 				</ul>
 			</div>
 			
@@ -49,13 +49,13 @@
 			$('#footer').css({top: $(document).height() - 32});
 			
 			// global vars
-			wmanager.setGlobal({
+			wmanager.configure({
 				iconsPath: '../../icons/',
 				lang: 'ru',
 				taskbar: $('#taskbar')
 			});
 			
-			wmanager.regWin('video', video);
+			wmanager.regWin('basic_win', basic_win);
 				
 			//openWin();
 			
@@ -79,7 +79,7 @@
 				'top': 100,
 				'title': 'Test window',
 				'winCode': 'video',
-				'method': video,
+				'openFunc': video,
 				'open': function(wid, win) {
 					win.html('<iframe width="570" height="349" src="http://www.youtube.com/embed/3JVcdtSNlLY" frameborder="0" allowfullscreen></iframe>');
 				}
@@ -101,7 +101,7 @@
 				'group': 'wins',
 				buttMinimize: true,
 				buttRefresh: true,
-				'method': twitter,
+				'openFunc': twitter,
 				'open': function(d, wid, win) {
 					var div = $('<div></div>');
 
@@ -113,7 +113,24 @@
 				}
 			});
 		}
-			
+		
+		function basic_win() {
+				win = wmanager.open({
+					'width': 590,
+					'height': 390,
+					'left': 170,
+					'top': 100,
+					'title': 'Test window',
+					'winCode': 'basic_win',
+					'openFunc': basic_win,
+					'open': function(wid, win) {
+						win.html('5555');
+					}
+				});
+				
+				//win.close();
+		}
+		
 		</script>
 		
 

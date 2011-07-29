@@ -42,7 +42,7 @@
 		 * Method, to set global variable
 		 * @param {Object} Vars Object, containing global vars.
 		 */
-		setGlobal: function(k, v) {
+		configure: function(k, v) {
 			if( typeof(k) == 'object' ) {
 				$.each(k, function(key, val) {
 					wmanager.globals[key] = val;
@@ -842,7 +842,7 @@
 		},
 		stateChanged: function() {
 			fbug('state changed');
-			//wmanager.serialize();
+			wmanager.serialize();
 		},
 		serialize: function() {
 
