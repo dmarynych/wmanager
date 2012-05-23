@@ -3,14 +3,14 @@
  * @version 0.9 - 2011-06-01
  */
 
-(function($, undefined) {
+(function($, window, undefined) {
 	/**
 	 * bla bla
 	 * @class wmanager main class
 	 * @param {object} Properties
 	 * Object with properties of new window
 	 */
-	wmanager = {
+	window.wmanager = {
 		/**
 		 * @class
 		 * Global vars, applied to all windows, can be extended by method wmanager.setGlobal()
@@ -25,16 +25,16 @@
 			 */
 			save: function() {
 			},
-			iconsPath: 'icons/',
+			iconsPath: '/img/icons/',
 			lang: 'en',
-			stateChanged: false,
+			stateChanged: function() {},
 			taskbar: false,
 			sessionWriter: function(ar) {
-				fbug('sessionWriter')
+				fbug('sessionWriter');
 				store.set('wmanager_save', ar);
 			},
 			sessionReader: function() {
-				fbug('sessionReader')
+				fbug('sessionReader');
 				return store.get('wmanager_save');
 			}
 		},
@@ -42,7 +42,7 @@
 		 * Method, to set global variable
 		 * @param {Object} Vars Object, containing global vars.
 		 */
-		setGlobal: function(k, v) {
+        configure: function(k, v) {
 			if( typeof(k) == 'object' ) {
 				$.each(k, function(key, val) {
 					wmanager.globals[key] = val;
@@ -50,7 +50,6 @@
 			} else {
 				wmanager.globals[k] = v;
 			}
-
 		},
 		/**
 		 * @class
@@ -177,7 +176,7 @@
 			 * @param win {jQuery object} Window content div
 			 *
 			 */
-			dragStart: false,
+			dragStart: false
 		},
 		// array holds left positions of wins, to permit opening in same place
 		winArrByLeft: [],
@@ -789,7 +788,7 @@
 				op.left += 25;
 				op.top += 25;
 				// Проверяем новые значения
-				return wmanager.checkPos(op);
+				return [op.left, op.top];//wmanager.checkPos(op);
 			} else {
 				wmanager.winArrByLeft[op.left +'_'+ op.top] = op.wid;
 				return [op.left, op.top];
@@ -863,70 +862,65 @@
 			delete wmanager.winRunners[winCode];
 		},
 		stateChanged: function() {
-			fbug('state changed');
+            wmanager.globals.stateChanged();
 			//wmanager.serialize();
 		},
 		serialize: function() {
-
 			// Сейвим, только если чтото изменилось
 			//if( wmanager.interfaceChanged !== true ) return false;
-
 			var wins = wmanager.windows;
 			var ret = {
 				wins: [],
 				res: []
 			};
 			var err = false;
-			fbug(wins)
-			if (wins.length !== 0) {
+            var z = [], ar = {};
+            $.each(wins, function(k, v) {
+                v = $(v.win.parent());
+                if( empty(v)) {
+                    return;
+                }
+                var pos = v.offset();
+                var left = pos.left;
+                var top = pos.top;
 
-				var z = [], ar = {};
-				$.each(wins, function(k, v) {
-					v = $(v.win.parent());
-					if( empty(v)) {
-						return;
-					}
-					var pos = v.offset();
-					var left = pos.left;
-					var top = pos.top;
+                // фикс для тупого хрома
+                if( left < 0 ) {
+                    fbug('chrome fuck error')
+                    err = true;
+                    return;
+                }
 
-					// фикс для тупого хрома
-					if( left < 0 ) {
-						fbug('chrome fuck error')
-						err = true;
-						return;
-					}
+                if (!empty(v.data('winCode'))) {
 
-					if (!empty(v.data('winCode'))) {
+                    var zIn = parseInt(v.css('zIndex'), 10);
+                    // Массив с зИндексами, по-которому будем сортировать
+                    z.push(zIn);
+                    // Вспомогательный массив с ключами - зИндексами
+                    ar[zIn] = {
+                        //'i': v.attr('id'),
+                        'w': parseInt(v.width(), 10),
+                        'h': parseInt(v.height(), 10),
+                        'l': parseInt( pos.left, 10),
+                        't': parseInt( pos.top, 10),
+                        'c': v.data('winCode'),
+                        //'cl': v.attr('winClass'),
+                        'p': v.data('createParams'),
+                        //'color': v.data('colorPreset'),
+                        //'font': v.data('fontPreset'),
+                        'z': parseInt(v.css('zIndex'), 10),
+                        'wid': v.data('wid')
+                    };
+                }
+            });
+            // Сортируем по зИндексу
+            z = z.sort( function (a,b) {
+                return a-b;
+            });
+            $.each(z, function(k, v) {
+                ret.wins.push( ar[v] );
+            });
 
-						var zIn = parseInt(v.css('zIndex'), 10);
-						// Массив с зИндексами, по-которому будем сортировать
-						z.push(zIn);
-						// Вспомогательный массив с ключами - зИндексами
-						ar[zIn] = {
-							//'i': v.attr('id'),
-							'w': parseInt(v.width(), 10),
-							'h': parseInt(v.height(), 10),
-							'l': parseInt( pos.left, 10),
-							't': parseInt( pos.top, 10),
-							'c': v.data('winCode'),
-							//'cl': v.attr('winClass'),
-							'p': v.data('createParams'),
-							//'color': v.data('colorPreset'),
-							//'font': v.data('fontPreset'),
-							'z': parseInt(v.css('zIndex'), 10),
-							'wid': v.data('wid')
-						};
-					}
-				});
-				// Сортируем по зИндексу
-				z = z.sort( function (a,b) {
-					return a-b;
-				});
-				$.each(z, function(k, v) {
-					ret.wins.push( ar[v] );
-				});
-			}
 
 			// ресайзер
 			ret.res = $('.ui-layout-resizer').css('right');
@@ -945,12 +939,12 @@
 
 			// сериалайз делать не нужно, если не изменен интерфес
 			//wmanager.interfaceChanged = false;
-			fbug('saving state')
+			//fbug('saving state')
+            //fbug(ret)
 			wmanager.globals.sessionWriter(ret);
 			//return ret;
 		},
 		restore: function() {
-
 			try {
 				var ar = wmanager.globals.sessionReader();
 
@@ -987,7 +981,7 @@
 								//winClass: v.cl,
 								zIndex: zin,
 								createParams: v.p,
-								wid: v.wid,
+								wid: v.wid
 								//colorPreset: v.color,
 								//fontPreset: v.font
 							};
@@ -998,8 +992,14 @@
 							setTimeout( function() {
 								if(isset(wmanager.winRunners[d.winCode])) {
 									var func = wmanager.winRunners[d.winCode];
-									
-									func();
+
+                                    if(d.createParams) {
+                                        func.call(window, d.createParams);
+                                    }
+                                    else {
+                                        func();
+                                    }
+
 								}
 								//wmanager.open(d.winCode, d.createParams);
 							}, 200 + (100 * k));
@@ -1085,4 +1085,4 @@
 		}
 	});*/
 
-})(jQuery);
+})(jQuery, window);
