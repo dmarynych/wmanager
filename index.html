@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>wmanager 2</title>
+
+    <link rel="stylesheet" href="/css/absolution/jquery.ui.all.css" type="text/css" />
+    <!--<link rel="stylesheet" href="/css/Aristo/jquery-ui-1.8.7.custom.css" type="text/css" />-->
+    <link rel="stylesheet" href="/css/wmanager.css" type="text/css" />
+
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.8.22.custom.min.js"></script>
+
+
+
+</head>
+<body>
+
+
+<script type="text/javascript">
+    $(function() {
+        wmanager.open({
+            title: 'win',
+            open: function(wid, win) { console.log(arguments) }
+        });
+    });
+</script>
+    <script type="text/javascript" src="/js/wmanager-2.0.js"></script>
+    <script type="text/javascript" src="/js/json.js"></script>
+    <script type="text/javascript" src="/js/store.js"></script>
+</body>
+</html>
